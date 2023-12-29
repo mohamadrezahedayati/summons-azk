@@ -1,22 +1,17 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Input from '../Base/Input';
 import Button from '../Base/Button';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
-
-type Values = {
-    firstName: string,
-    lastName: string,
-    phone: string,
-    password: string,
-}
+import { UserContext } from '../../contexts/user.context';
+import { UserType } from "../../types/index";
 
 const Form = () => {
+    const { setCurrentUser } = useContext(UserContext)
 
     const {
-        handleSubmit,
         control,
         formState: { errors },
-    } = useForm<Values>({
+    } = useForm<UserType>({
         defaultValues: {
             firstName: "",
             lastName: "",
@@ -26,7 +21,7 @@ const Form = () => {
     });
 
 
-    const [values, setValues] = useState<Values>({
+    const [values, setValues] = useState<UserType>({
         firstName: "",
         lastName: "",
         phone: "",
@@ -37,14 +32,19 @@ const Form = () => {
         setValues({ ...values, [event.target.name]: event.target.value });
     }
 
-    const onSubmit: SubmitHandler<Values> = (data) => console.log(data)
+    const handleSubmit = (event : React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        console.log(values)
+        setCurrentUser(values)
+    }
 
     return (
         <div className='flex flex-col w-2/5 p-8'>
             <h2 className='text-3xl mb-2 text-bold'> ثبت نام </h2>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={(e) => handleSubmit(e)}>
                 <div className='flex'>
-                    <Controller
+
+                    {/* <Controller
                         name="firstName"
                         control={control}
                         rules={{ required: true }}
@@ -55,6 +55,14 @@ const Form = () => {
                             placeholder="نام"
                             className='ml-4'
                         />}
+                    /> */}
+
+                    <Input
+                        value={values.firstName}
+                        name='firstName'
+                        onChange={(e) => handleChange(e)}
+                        placeholder="نام"
+                        className='ml-4'
                     />
 
                     <Input
@@ -84,7 +92,6 @@ const Form = () => {
                         label="ثبت نام"
                         type="submit"
                         variant='secondary'
-                        onClick={() => onSubmit}
                     />
                 </div>
             </form>
