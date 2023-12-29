@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 
 interface Option {
   label: string;
-  value: string;
+  value: number;
+  [k: string]: any;
 }
 
 interface DropdownProps {
   options: Option[];
+  placeholder: string;
   onSelect: (option: Option) => void;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
+const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, placeholder }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
@@ -26,7 +28,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect }) => {
         className="flex items-center justify-between px-4 py-2 bg-white border border-gray-300 rounded-md cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span>{selectedOption ? selectedOption.label : 'Select an option'}</span>
+        <span>{selectedOption ? selectedOption.label : placeholder}</span>
         <svg
           className={`w-4 h-4 ml-2 transition-transform duration-200 transform ${
             isOpen ? 'rotate-180' : ''

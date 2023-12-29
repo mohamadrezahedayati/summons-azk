@@ -1,30 +1,41 @@
-import React, { lazy } from 'react'
+import { Suspense, lazy } from 'react'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import Layout from './components/layout/Layout';
+import { UserProvider } from './contexts/user.context';
 import './App.css';
 
-import Layout from './components/layout/Layout';
-import { First } from './pages/register/steps/first';
-import { Sec } from './pages/register/steps/sec';
-import { UserProvider } from './contexts/user.context';
+const queryClient = new QueryClient()
+const Spinner = lazy(() => import("./components/spinner/spinner"));
 const RegisterPage = lazy(() => import("./pages/register/register"));
-const StepsPage = lazy(() => import("./pages/register/steps"));
+const InsuranceListPage = lazy(() => import("./pages/insuranceList/index"));
+const StepsPage = lazy(() => import("./pages/thirdPartyInsurance"));
+const FirstStep = lazy(() => import("./pages/thirdPartyInsurance/firstStep"));
+const SecondStep = lazy(() => import("./pages/thirdPartyInsurance/secondStep"));
+const ThirdStep = lazy(() => import("./pages/thirdPartyInsurance/thirdStep"));
 
 
 function App() {
   return (
     <Router>
-      <UserProvider>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<RegisterPage/>} />
-            <Route path='/steps' element={<StepsPage/>}>
-              <Route path="first" element={<First/>} />
-              <Route path="sec" element={<Sec/>} />
-            </Route>
-          </Routes>
-        </Layout>
-      </UserProvider>
-    </Router>
+        <QueryClientProvider client={queryClient}>
+        <UserProvider>
+          <Layout>
+            <Suspense fallback={<Spinner />}>
+              <Routes>
+                <Route path="/" element={<RegisterPage />} />
+                <Route path="/list" element={<InsuranceListPage />} />
+                <Route path='/steps' element={<StepsPage />}>
+                  <Route path="first" element={<FirstStep />} />
+                  <Route path="second" element={<SecondStep />} />
+                  <Route path="third" element={<ThirdStep />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </Layout>
+        </UserProvider>
+    </QueryClientProvider>
+      </Router>
   );
 }
 

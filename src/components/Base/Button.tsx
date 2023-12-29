@@ -1,11 +1,12 @@
 import React from 'react';
 
 interface ButtonProps {
-  label: string;
+  label?: string;
   variant?: 'primary' | 'secondary' | 'danger';
   className?: string;
   onClick?: () => void;
   type?:  "submit" | "reset" | "button" | undefined
+  children?: React.ReactNode
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -14,6 +15,7 @@ const Button: React.FC<ButtonProps> = ({
   className,
   type = 'submit',
   onClick,
+  children
 }) => {
   const getVariantClasses = () => {
     switch (variant) {
@@ -32,6 +34,7 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       type={type}
     >
+      {children}
       {label}
     </button>
   );

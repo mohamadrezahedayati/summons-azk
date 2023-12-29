@@ -1,30 +1,22 @@
-import React, { LegacyRef } from 'react';
+import React from 'react';
+import { UseControllerProps, useController, FieldValues } from 'react-hook-form';
 
-interface InputProps {
+interface InputProps<T extends FieldValues> extends UseControllerProps<T> {
   label?: string;
   type?: string;
   placeholder?: string;
   className?: string;
-  name?: string;
-  value: string;
-  ref?: LegacyRef<HTMLInputElement> | undefined;
-  onChange: (value: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<InputProps> = ({
+function Input<T extends FieldValues> ({
   label,
   type = 'text',
   placeholder = '',
-  value,
   className,
-  name,
-  ref,
-  onChange,
-}) => {
+  ...props
+}: InputProps<T>) {
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(event);
-  };
+  const { field, fieldState } = useController(props);
 
   return (
     <div className="flex flex-col mb-4">
@@ -33,12 +25,11 @@ const Input: React.FC<InputProps> = ({
         className={`px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 ${className}`}
         type={type}
         placeholder={placeholder}
-        value={value}
-        name={name}
-        ref={ref}
-        onChange={handleInputChange}
+        {...field}
       />
+      <p>{fieldState.error?.message}</p>
     </div>
+
   );
 };
 
