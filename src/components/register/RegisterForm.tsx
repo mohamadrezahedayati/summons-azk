@@ -4,9 +4,11 @@ import Button from '../Base/Button';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import { UserContext } from '../../contexts/user.context';
 import { UserType } from "../../types/index";
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const Form = () => {
     const { setCurrentUser } = useContext(UserContext)
+    const [_, setUser] = useLocalStorage("user", "");
 
     const {
         control,
@@ -34,8 +36,8 @@ const Form = () => {
 
     const handleSubmit = (event : React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(values)
         setCurrentUser(values)
+        setUser(values)
     }
 
     return (
