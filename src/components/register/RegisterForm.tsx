@@ -15,7 +15,6 @@ const Form = () => {
     const {
         handleSubmit,
         control,
-        formState,
         getValues
     } = useForm<UserType>({
         defaultValues: {
